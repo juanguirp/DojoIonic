@@ -1,6 +1,8 @@
 angular.module('app.controllers', [])
-	.config('pageCtrl', function($scope, $ionicModal){
-		$scope.games = [{
+
+.controller('pageCtrl', function($scope, $ionicModal) {
+
+    $scope.games = [{
         nombre: "Fifa 2016",
         fechaLanzamiento: "Septiembre 2015",
         genero: "Deportes",
@@ -9,7 +11,7 @@ angular.module('app.controllers', [])
     }, {
         nombre: "Life Is Strange",
         fechaLanzamiento: "Enero 2015",
-        genero: "Aventura Grafica",
+        genero: "Aventura Gráfica",
         imagen: "http://gamerescape.com/wp-content/uploads/2014/08/lifeisstrange.jpg",
         votos: 0
     }, {
@@ -21,39 +23,60 @@ angular.module('app.controllers', [])
     }];
 
     $scope.juego = {
-    	nombre: '',
-    	fechaLanzamiento: '',
-    	genero: '',
-    	imagen: '',
-    	votosAcumulados: 0,
-    	votos: 0
+        nombre: '',
+        fechaLanzamiento: '',
+        genero: '',
+        imagen: '',
+        votosAcumulados: 0,
+        votos: 0
     };
 
     $ionicModal.fromTemplateUrl('votarModal.html', {
-    	scope: $scope,
-    	animation: 'slide-in-up'
+        scope: $scope,
+        animation: 'slide-in-up'
     }).then(function(modal) {
-    	$scope.votarModal = modal;
+        $scope.votarModal = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('nuevoModal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.nuevoModal = modal;
     });
 
     $scope.votar = function() {
-    	for (var i = 0; i < $scope.games.length; i++) {
-    		if ($scope.games[i].nombre == $scope.juego.nombre) {
-    			 $scope.games[i].votos = $scope.games[i].votos + parseInt($scope.juego.votos)
-    			 break;
-    		};
-    	}
-    	$scope.votarModal.hide();
-    	$scope.juego.votos = 0;
+        for (var i = 0; i < $scope.games.length; i++) {
+            if ($scope.games[i].nombre == $scope.juego.nombre) {
+                $scope.games[i].votos = $scope.games[i].votos + parseInt($scope.juego.votos);
+                break;
+            }
+        }
+        $scope.votarModal.hide();
+        $scope.juego.votos = 0;
     };
 
-    $scope.juegoSelected = function(item) {
-    	$scope.juego.nombre = item.nombre;
-    	$scope.juego.fechaLanzamiento = item.fechaLanzamiento;
-    	$scope.juego.genero = item.genero;
-    	$scope.juego.votosAcumulados = item.votos;
-    	$scope.votarModal.show();
+    $scope.juegoSelect = function(item) {
+        $scope.juego.nombre = item.nombre;
+        $scope.juego.fechaLanzamiento = item.fechaLanzamiento;
+        $scope.juego.genero = item.genero;
+        $scope.juego.votosAcumulados = item.votos;
+        $scope.votarModal.show();
     };
 
-	})
-	
+    $scope.limpiarJuego = function() {
+        $scope.juego.nombre = '';
+        $scope.juego.fechaLanzamiento = '';
+        $scope.juego.genero = '';
+        $scope.juego.imagen = '';
+        $scope.juego.votosAcumulados = 0;
+        $scope.juego.votos = 0;
+        $scope.nuevoModal.show();
+    }
+
+    $scope.anadirJuego = function() {
+        $scope.games.push($scope.juego);
+        $scope.nuevoModal.hide();
+
+    }
+})
